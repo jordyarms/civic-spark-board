@@ -1,0 +1,30 @@
+name: "Submit a new photo"
+description: "Attach an image; the workflow will publish the first one as latest.jpg"
+title: "New photo: <short description>"
+labels: ["photo"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **How to submit:** Drag & drop or paste your image into the box below.
+        The **first image** in this issue will be published as `latest.jpg`.
+  - type: textarea
+    id: image
+    attributes:
+      label: "Attach your image"
+      description: "Drop/paste PNG, JPG, GIF, or HEIC."
+      placeholder: "Drop/paste image here…"
+    validations:
+      required: true
+  - type: input
+    id: credit
+    attributes:
+      label: "Credit (optional)"
+      placeholder: "Name or link for attribution"
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: "Confirm"
+      options:
+        - label: "I have the right to share this image."
+          required: true
