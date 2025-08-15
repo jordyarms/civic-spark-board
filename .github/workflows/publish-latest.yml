@@ -38,10 +38,10 @@ jobs:
       - name: Download image
         run: curl -L "${{ steps.findimg.outputs.url }}" -o incoming
 
-      - name: Convert to JPEG
+      - name: Download and convert to JPEG
         run: |
-          sudo apt-get update && sudo apt-get install -y imagemagick
-          magick incoming -auto-orient -resize "2000x2000>" -strip latest.jpg
+          curl -L "${{ steps.findimg.outputs.url }}" -o incoming
+          convert incoming -auto-orient site/latest.jpg
 
       - name: Commit and push latest.jpg
         run: |
