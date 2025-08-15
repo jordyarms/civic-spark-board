@@ -1,6 +1,6 @@
 name: "Submit a new photo"
 description: "Attach an image; the workflow will publish the first one as latest.jpg"
-title: "New photo
+title: "New photo: <short description>"
 labels: ["photo"]
 body:
   - type: markdown
@@ -16,4 +16,3 @@ body:
       placeholder: "Drop/paste image here…"
     validations:
       required: true
-  
