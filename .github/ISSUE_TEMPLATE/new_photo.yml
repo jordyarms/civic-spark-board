@@ -1,6 +1,6 @@
 name: "Submit a new photo"
 description: "Attach an image; the workflow will publish the first one as latest.jpg"
-title: "New photo: <short description>"
+title: "New photo
 labels: ["photo"]
 body:
   - type: markdown
@@ -16,15 +16,4 @@ body:
       placeholder: "Drop/paste image here…"
     validations:
       required: true
-  - type: input
-    id: credit
-    attributes:
-      label: "Credit (optional)"
-      placeholder: "Name or link for attribution"
-  - type: checkboxes
-    id: confirm
-    attributes:
-      label: "Confirm"
-      options:
-        - label: "I have the right to share this image."
-          required: true
+  
