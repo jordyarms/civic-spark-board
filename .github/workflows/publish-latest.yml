@@ -1,0 +1,53 @@
+name: Publish latest.jpg from issue image
+on:
+  issues:
+    types: [opened, edited, reopened]
+
+permissions:
+  contents: write
+  issues: read
+
+jobs:
+  extract-and-publish:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.issue.state == 'open' }}
+    steps:
+      - name: Check out gh-pages branch
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+
+      - name: Find first image URL in issue body
+        id: findimg
+        run: |
+          body=$(jq -r '.issue.body' < "$GITHUB_EVENT_PATH")
+          # 1) markdown image ![...](url)
+          url=$(printf "%s" "$body" | perl -ne 'print "$1\n" and exit if m{!\[[^\]]*\]\((https?://[^\s)]+)\)}i; END{print ""}')
+          # 2) or any direct image/user-images link
+          if [ -z "$url" ]; then
+            url=$(printf "%s" "$body" | grep -Eo '(https?://[^ )]+(\.png|\.jpe?g|\.gif)|https://user-images\.githubusercontent\.com/[^ )]+)' | head -n1)
+          fi
+          echo "url=$url" >> $GITHUB_OUTPUT
+
+      - name: Fail if none found
+        if: steps.findimg.outputs.url == ''
+        run: |
+          echo "No image URL found in the issue body." >&2
+          exit 1
+
+      - name: Download image
+        run: curl -L "${{ steps.findimg.outputs.url }}" -o incoming
+
+      - name: Convert to JPEG
+        run: |
+          sudo apt-get update && sudo apt-get install -y imagemagick
+          magick incoming -auto-orient -resize "2000x2000>" -strip latest.jpg
+
+      - name: Commit and push latest.jpg
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mv latest.jpg ./latest.jpg
+          git add latest.jpg
+          git commit -m "Update latest.jpg from issue #${{ github.event.issue.number }}" || echo "No changes to commit"
+          git push origin gh-pages

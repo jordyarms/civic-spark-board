@@ -1,0 +1,11 @@
+<!-- gh-pages/index.html -->
+<!doctype html>
+<meta charset="utf-8">
+<title>Latest Photo</title>
+<h1>Latest Photo</h1>
+<p><img id="img" src="latest.jpg" alt="Latest photo" style="max-width:100%"></p>
+<p><a href="https://github.com/<you>/<repo>/issues/new?title=New+photo&body=Attach%20an%20image%20and%20press%20Submit.">Submit a photo</a></p>
+<script>
+  // helps beat CDN/browser cache while viewing the page
+  document.getElementById('img').src = 'latest.jpg?ts=' + Date.now();
+</script>
